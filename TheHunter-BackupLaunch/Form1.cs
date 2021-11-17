@@ -71,22 +71,29 @@ namespace TheHunter_BackupLaunch
             textBox3.Text = GameMainFilePath;
 
             //默认steam启动
-            if (StartWithSteam.Equals("") || StartWithSteam.Equals("false"))
+            if (StartWithSteam.Equals("") || StartWithSteam.Equals("true"))
             {
-                RunGameCommand = GameMainFilePath; // .exe启动
-                label3.Visible = true;
-                textBox3.Visible = true;
-                button3.Visible = true;
-            }
-            else
-            {
+          
                 checkBox3.Checked = true;
                 RunGameCommand = SteamCommand; // steam::\\启动
                 label3.Visible = false;
                 textBox3.Visible = false;
                 button3.Visible = false; 
-            }
 
+                StartWithSteam = "true";
+                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
+            }
+            else
+            {
+                RunGameCommand = GameMainFilePath; // .exe启动
+                label3.Visible = true;
+                textBox3.Visible = true;
+                button3.Visible = true;
+
+                 StartWithSteam = "false";
+                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
+            }
+    
 
 
             //默认启动游戏后自动退出本程序
@@ -162,6 +169,7 @@ namespace TheHunter_BackupLaunch
         {
             if (BackupDirectoryPath.Equals(""))
             {
+                ShowInfo("---------------------------------------------");
                 ShowInfo("没有设置存档备份文件夹");
             }
             else
@@ -218,11 +226,13 @@ namespace TheHunter_BackupLaunch
                     ShowInfo("---------------------------------------------");
                     ShowInfo(RunGameCommand);
                     ShowInfo("---------------------------------------------");
+                    
                     ShowInfo("如果你没有安装steam正版, 不要勾选'使用steam命令启动游戏'");
                     ShowInfo("你可以不要勾选'使用steam命令启动游戏'.设置游戏启动路径后再试试," + ex.Message);
+                    ShowInfo("勾选默认启动猎人：荒野的召唤, 防坏档专用特别版");
                     ShowInfo("讲道理, 这个小工具可以设置成备份任何游戏存档...");
                     ShowInfo("毕竟它的设计目标就是复制存档文件夹然后启动游戏...");
-                    ShowInfo("这个小工具应该不会有BUG, 如果有那肯定是你电脑坏了,毕竟我测试了好几次,木有问题...");
+                    ShowInfo("这个小工具应该不会有BUG, 木有问题...如果有那肯定是你电脑坏了,毕竟我测试了好几个小时,还没有加班费!"); 
                 }
                 
                 
@@ -246,6 +256,7 @@ namespace TheHunter_BackupLaunch
 
             if (textBox1.Text.Equals(""))
             {
+                ShowInfo("---------------------------------------------");
                 ShowInfo("选择游戏存档文件夹");
                 return false;
             }
@@ -253,18 +264,21 @@ namespace TheHunter_BackupLaunch
 
             if (textBox2.Text.Equals(""))
             {
+                ShowInfo("---------------------------------------------");
                 ShowInfo("选择存档备份文件夹");
                 return false;
             }
 
             if ((checkBox3.Checked == false) && (textBox3.Text.Equals("")))
             {
+                ShowInfo("---------------------------------------------");
                 ShowInfo("没有设置游戏文件路径");
                 return false;
             }
 
             if (textBox1.Text.Equals(textBox2.Text))
             {
+                ShowInfo("---------------------------------------------");
                 ShowInfo("请选择一个不同的路径保存存档");
                 return false;
             }
@@ -579,7 +593,9 @@ namespace TheHunter_BackupLaunch
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                ShowInfo("---------------------------------------------");
                 ShowInfo("备份文件时出错,请尝试更改设置");
+                ShowInfo("---------------------------------------------");
                 return 0;
             }
 

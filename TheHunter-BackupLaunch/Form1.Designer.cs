@@ -232,7 +232,7 @@
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "猎人：荒野的召唤 自动备份存档游戏启动器 V1.0";
+            this.Text = "自动备份存档游戏启动器 V1.0";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
