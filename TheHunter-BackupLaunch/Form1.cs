@@ -12,26 +12,28 @@ namespace TheHunter_BackupLaunch
 {
     public partial class Form1 : Form
     {
+        static string RunGameCommand = "stem:\\";
+        static string GameFilePath = "";
         static string GameProcessName = "360chrome";
         static string[] txtString;
-        static string sourceDirectory;
-        static string destinationDirectory;
+        static string SourceDirectory = "";
+        static string BackupDirectory = "";
 
         public Form1()
         {
             InitializeComponent();
-
-            //添加图片后缀选择框,默认选择第一个
-            //this.comboBox1.Items.Add(".bmp");
-            //this.comboBox1.Items.Add(".jpg");
-            //this.comboBox1.Items.Add(".png");
-            //this.comboBox1.SelectedIndex = 0;
         }
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            toolTip1.SetToolTip(label4, "Power By cuisanzhang@163.com");
 
+            //默认steam启动
+            checkBox2.Checked = true;
+            label3.Visible = false;
+            textBox3.Visible = false;
+            button3.Visible = false;
         }
 
 
@@ -55,68 +57,67 @@ namespace TheHunter_BackupLaunch
         //选择游戏存档文件夹
         private void button1_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog ofd = new OpenFileDialog();
-            //ofd.Filter = "文本文件(*.txt)|*.txt|所有文件|*.*";
-            //ofd.ValidateNames = true;
-            //ofd.CheckPathExists = true;
-            //ofd.CheckFileExists = true;
-            //if (ofd.ShowDialog() == DialogResult.OK)
-            //{
-            //    string strFileName = ofd.FileName;
-            //    //其他代码
-            //    textBox1.Text = strFileName;
-            //}
+            
 
-            sourceDirectory = OpenFileFolder("选择游戏存档文件夹");
-            textBox1.Text = sourceDirectory;
+            SourceDirectory = OpenFileFolder("选择游戏存档文件夹");
+            textBox1.Text = SourceDirectory;
         }
+
+        //选择存档备份文件夹
         private void button2_Click(object sender, EventArgs e)
         {
-            sourceDirectory = OpenFileFolder("选择存档备份文件夹");
-            textBox2.Text = sourceDirectory;
+            BackupDirectory = OpenFileFolder("选择存档备份文件夹");
+            textBox2.Text = BackupDirectory;
         }
 
+        //选择游戏启动文件
         private void button3_Click(object sender, EventArgs e)
         {
-            if (isGameRuning())
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "游戏启动文件(*.exe)|*.exe|所有文件|*.*";
+            ofd.ValidateNames = true;
+            ofd.CheckPathExists = true;
+            ofd.CheckFileExists = true;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+            string strFileName = ofd.FileName;
+                 //获取路径
+                textBox3.Text = strFileName;
+                GameFilePath = strFileName;
+           }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+            if (checkAllInput() == false)//检查路径
+            {
+                return;
+
+            }
+            else if (isGameRuning())//检测进程
             {
                 MessageBox.Show("检测到进程,游戏正在运行中,请先停止游戏");
             }
+          
             else
             {
+                //启动游戏
+                Process.Start(RunGameCommand);
                 Application.Exit();
             }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (checkAllInput() == false)
+            if (BackupDirectory.Equals(""))
             {
-                return;
-
+                ShowInfo("没有设置存档备份文件夹");
             }
-
-            try
+            else
             {
-                int count = ReadTxtFile(textBox1.Text);
-                //foreach (string s in txtString)
-                //{
-                //    ShowInfo(s);
-                //}
-                ShowInfo("从txt共读取数据" + count + "条");
- 
-
-                CopyFile();
+                System.Diagnostics.Process.Start(BackupDirectory);
             }
-            catch (Exception exception)
-            {
-                ShowInfo("遇到错误!请检查输入！！！" + exception);
-            }
-
-
-
-
-
         }
 
 
@@ -131,9 +132,9 @@ namespace TheHunter_BackupLaunch
             foreach (string file in txtString)
             {
                 //拼接原始文件路径
-                string sourcefilepath = Path.Combine(sourceDirectory, file);
+                string sourcefilepath = Path.Combine(SourceDirectory, file);
                 //拼接目标文件路径
-                string destinationfilepath = Path.Combine(destinationDirectory, file);
+                string destinationfilepath = Path.Combine(BackupDirectory, file);
 
 
                 if (File.Exists(sourcefilepath))
@@ -181,7 +182,7 @@ namespace TheHunter_BackupLaunch
                 ShowInfo("选择游戏存档文件夹");
                 return false;
             }
-            sourceDirectory = textBox1.Text;
+            SourceDirectory = textBox1.Text;
 
             if (textBox2.Text.Equals(""))
             {
@@ -195,7 +196,7 @@ namespace TheHunter_BackupLaunch
                 ShowInfo("请选择一个不同的路径保存存档");
                 return false;
             }
-            destinationDirectory = textBox2.Text;
+            BackupDirectory = textBox2.Text;
 
             return true;
         }
@@ -214,16 +215,42 @@ namespace TheHunter_BackupLaunch
                 try
                 {
                     info =p.ProcessName;
-                    if(GameProcessName.Equals(info))
+                    if (GameProcessName.Equals(info))
+                    {
+                        ShowInfo("检测到进程" + info);
                         return true;
+                    }
                 }
                 catch (Exception e)
                 {
                     info = e.Message;
                 }
-                ShowInfo("检测进程" + info);
+              
             }
             return false;
         }
+
+        //选择启动方式
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                RunGameCommand = "stem:\\";
+                label3.Visible = false;
+                textBox3.Visible = false;
+                button3.Visible = false; 
+            }
+            else
+            {
+                RunGameCommand = GameFilePath;
+                label3.Visible = true;
+                textBox3.Visible = true;
+                button3.Visible = true;
+            }
+        }
+
+
+
+ 
     }
 }
