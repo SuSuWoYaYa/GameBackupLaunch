@@ -10,9 +10,9 @@ using System.Diagnostics;
 
 
 //读写ini
-using System.IO;
+//using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
+//using System.Text;
 
 namespace TheHunter_BackupLaunch
 {
