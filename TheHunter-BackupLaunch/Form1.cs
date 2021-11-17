@@ -25,16 +25,18 @@ namespace TheHunter_BackupLaunch
         static string IniGameSavePath = "GameSavePath";
         static string IniBackupPath = "BackupPath";
         static string IniGameFilePath = "GameFilePath";
+        static string IniStartWithSteam = "StartWithSteam";
         static string IniConfigFilePath = "";
 
-        static string RunGameCommand = "stem:\\";   //steam命令
+        static string RunGameCommand = "";   //steam命令
+        static string SteamCommand = "stem:\\";   //steam命令
         static string GameMainFilePath = "";    //游戏文件路径
-        static string GameProcessName = "360chrome";
-        static string[] txtString;
+        static string GameProcessName = ""; //游戏进程名称
+       //
         static string SourceDirectoryPath = "";
         static string BackupDirectoryPath = "";
         static string MyMail = "Power By cuisanzhang@163.com";
-        
+        static string StartWithSteam = "true";
 
         public Form1()
         {
@@ -46,17 +48,32 @@ namespace TheHunter_BackupLaunch
         {
             toolTip1.SetToolTip(label4, MyMail);
 
-            //默认steam启动
-            checkBox2.Checked = true;
-            label3.Visible = false;
-            textBox3.Visible = false;
-            button3.Visible = false;
+         
 
             //创建ini配置文件
             string path = System.Environment.CurrentDirectory;
             IniConfigFilePath = Path.Combine(path, IniConfigFileName);  
             IniHelper.Ini_Create(IniConfigFilePath);
             //ShowInfo(IniConfigFilePath);
+
+            //读取ini配置
+            SourceDirectoryPath = IniHelper.Ini_Read(IniBackConfig, IniGameSavePath, IniConfigFilePath);
+            BackupDirectoryPath = IniHelper.Ini_Read(IniBackConfig, IniBackupPath, IniConfigFilePath);
+            GameMainFilePath = IniHelper.Ini_Read(IniBackConfig, IniGameFilePath, IniConfigFilePath);
+            StartWithSteam = IniHelper.Ini_Read(IniBackConfig, IniStartWithSteam, IniConfigFilePath);
+
+
+            //设置显示界面
+            textBox1.Text = SourceDirectoryPath;
+            textBox2.Text = BackupDirectoryPath;
+            textBox3.Text = GameMainFilePath;
+
+            //默认steam启动
+            if (StartWithSteam.Equals("") || StartWithSteam.Equals("false"))
+            {
+                checkBox2.Checked = false;
+          
+            }
         }
 
 
@@ -122,16 +139,36 @@ namespace TheHunter_BackupLaunch
                 return;
 
             }
+         
+            
+
             else if (isGameRuning())//检测进程
             {
+                
                 MessageBox.Show("检测到进程,游戏正在运行中,请先停止游戏");
             }
           
             else
             {
+                ShowInfo("============================================");
+                ShowInfo("开始备份");
+                BackAllFiles();//开始备份存档
+                ShowInfo("备份成功");
+
                 //启动游戏
-                Process.Start(RunGameCommand);
-                Application.Exit();
+                try
+                {
+
+                    Process.Start(RunGameCommand);
+                    Application.Exit();
+                }
+                catch (Exception ex)
+                {
+                    //启动游戏
+                    ShowInfo("启动游戏失败,如果你没有安装steam正版, 不要勾选'使用steam命令启动游戏'");
+                    ShowInfo("如果你没勾选.检查你的游戏路径," + ex.Message);
+                }
+                
             }
         }
 
@@ -148,56 +185,12 @@ namespace TheHunter_BackupLaunch
         }
 
 
-
-
-        //开始拷贝对应的工号图片到目标文件夹
-        private void CopyFile()
-        {
-            ShowInfo("开始拷贝图片");
-
-            int count = 0;
-            foreach (string file in txtString)
-            {
-                //拼接原始文件路径
-                string sourcefilepath = Path.Combine(SourceDirectoryPath, file);
-                //拼接目标文件路径
-                string destinationfilepath = Path.Combine(BackupDirectoryPath, file);
-
-
-                if (File.Exists(sourcefilepath))
-                {
-                    //原始文件存在,开始拷贝，已存在直接覆盖
-                    File.Copy(sourcefilepath, destinationfilepath, true);
-                    count++;
-                }
-                else
-                {
-                    //原始文件不存在
-                    ShowInfo("错误" + sourcefilepath + " 该文件不存在.");
-                }
-
-            }
-            ShowInfo("完成,共拷贝图片数量" + count);
-        }
-
-        //读取工号txt文件到数组中，每行一个工号
-        private int ReadTxtFile(string fileName)
-        {
-            int count = 0;
-
-
-            txtString = File.ReadAllLines(fileName, Encoding.ASCII);
-            count = txtString.Length;
-            return count;
-        }
-
-
-
-        //显示消息
+        //显示消息在文本框中
         private void ShowInfo(string msg)
         {
             msg += "\r\n";
-            textBox4.Text = msg + textBox4.Text;
+            //textBox4.Text = msg + textBox4.Text;
+            textBox4.Text += msg;
         }
 
         //检查所有输入
@@ -217,6 +210,11 @@ namespace TheHunter_BackupLaunch
                 return false;
             }
 
+            if ((checkBox2.Checked == false) && (textBox3.Text.Equals("")))
+            {
+                ShowInfo("没有设置游戏文件路径");
+                return false;
+            }
 
             if (textBox1.Text.Equals(textBox2.Text))
             {
@@ -228,7 +226,24 @@ namespace TheHunter_BackupLaunch
             return true;
         }
 
+        //开始备份存档
+        void BackAllFiles()
+        {
+            //ShowInfo(GetNewFolderName(SourceDirectoryPath));
+            string NewFolder = "";
+            NewFolder = GetNewFolderName(SourceDirectoryPath);
 
+            //生成备份位置绝对路径
+            string NewFolderFullPath = "";
+            NewFolderFullPath = Path.Combine(BackupDirectoryPath, NewFolder);
+            
+            ShowInfo("备份目标路径已生成 " + NewFolderFullPath);
+
+
+            ShowInfo("开始拷贝文件");
+            //复制文件夹
+            CopyFolder(SourceDirectoryPath, NewFolderFullPath);
+        }
 
 
 
@@ -262,22 +277,38 @@ namespace TheHunter_BackupLaunch
         {
             if (checkBox2.Checked)
             {
-                RunGameCommand = "stem:\\";
+                RunGameCommand = SteamCommand; // steam::\\启动
                 label3.Visible = false;
                 textBox3.Visible = false;
-                button3.Visible = false; 
+                button3.Visible = false;
+
+                StartWithSteam = "true";
+                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
             }
             else
             {
-                RunGameCommand = IniGameFilePath;
+                RunGameCommand = GameMainFilePath; // .exe启动
                 label3.Visible = true;
                 textBox3.Visible = true;
                 button3.Visible = true;
+
+                StartWithSteam = "false";
+                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
             }
         }
 
 
+        //生成一个新的文件夹名称,按 '年-月-日-时-分-秒' 添加
+        string GetNewFolderName(string sourceFolderPath)
+        {
+            string newFolderName = "";
+            newFolderName = DateTime.Now.ToString("-yyyy-MM-dd-HH-mm-ss");
 
+            string sourceFolder = "";
+            sourceFolder = Path.GetFileName(sourceFolderPath);
+
+            return sourceFolder+newFolderName;
+        }
 
 
         //https://blog.csdn.net/baidu_26678247/article/details/78254876?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1.no_search_link&spm=1001.2101.3001.4242.2
@@ -422,7 +453,71 @@ namespace TheHunter_BackupLaunch
             //Console.WriteLine("Age:" + _str_Age);                               //打印Name
             //#endregion
         }
- 
+
+
+
+
+
+
+        //https://www.cnblogs.com/fps2tao/p/14965561.html
+        //C#中复制文件夹及文件的两种方法
+        //方法一:
+        /// <summary>
+        /// 复制文件夹及文件
+        /// </summary>
+        /// <param name="sourceFolder">原文件路径</param>
+        /// <param name="destFolder">目标文件路径</param>
+        /// <returns></returns>
+        public int CopyFolder(string sourceFolder, string destFolder)
+        {
+            try
+            {
+                //如果目标路径不存在,则创建目标路径
+                if (!System.IO.Directory.Exists(destFolder))
+                {
+                    System.IO.Directory.CreateDirectory(destFolder);
+                }
+                //得到原文件根目录下的所有文件
+                string[] files = System.IO.Directory.GetFiles(sourceFolder);
+                foreach (string file in files)
+                {
+                    string name = System.IO.Path.GetFileName(file);
+                    string dest = System.IO.Path.Combine(destFolder, name);
+                    System.IO.File.Copy(file, dest);//复制文件
+                }
+                //得到原文件根目录下的所有文件夹
+                string[] folders = System.IO.Directory.GetDirectories(sourceFolder);
+                foreach (string folder in folders)
+                {
+                    string name = System.IO.Path.GetFileName(folder);
+                    string dest = System.IO.Path.Combine(destFolder, name);
+                    CopyFolder(folder, dest);//构建目标路径,递归复制文件
+                }
+                return 1;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                ShowInfo("备份文件时出错,请尝试更改设置");
+                return 0;
+            }
+
+        }
+
+
+
+
+        //C#中实现文本框的滚动条自动滚到最底端
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            textBox4.SelectionStart = textBox4.Text.Length;
+            textBox4.ScrollToCaret(); 
+
+        }
+        //————————————————
+        //版权声明：本文为CSDN博主「fml927」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+        //原文链接：https://blog.csdn.net/fml927/article/details/3940525
+
     }
 
 
