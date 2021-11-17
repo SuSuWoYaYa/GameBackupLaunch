@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -163,11 +164,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(280, 145);
+            this.label3.Location = new System.Drawing.Point(246, 145);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 12);
+            this.label3.Size = new System.Drawing.Size(137, 12);
             this.label3.TabIndex = 13;
-            this.label3.Text = "游戏启动文件";
+            this.label3.Text = "游戏启动文件路径或命令";
             // 
             // textBox3
             // 
@@ -230,6 +231,7 @@
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "自动备份存档游戏启动器 V1.0";

@@ -29,10 +29,10 @@ namespace TheHunter_BackupLaunch
         static string IniExitWhenStartGame = "ExitWhenStartGame";
         static string IniConfigFilePath = "";
 
-        static string RunGameCommand = "";   //steam命令
-        static string SteamCommand = "stem:\\";   //steam命令
-        static string GameMainFilePath = "";    //游戏文件路径
-        static string GameProcessName = ""; //游戏进程名称
+        static string RunGameCommand = "";   //运行命令
+        static string SteamCommand = "steam://rungameid/518790";   //steam命令
+        static string GameMainFilePath = "";    //游戏文件路径或命令
+        static string GameProcessName = "theHunterCotW_F"; //游戏进程名称
        //
         static string SourceDirectoryPath = "";
         static string BackupDirectoryPath = "";
