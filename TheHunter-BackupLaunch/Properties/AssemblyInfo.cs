@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("TheHunter-BackupLaunch")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("BackupLauncher")]
+[assembly: AssemblyDescription("自动备份存档启动器")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("WorkGroup")]
-[assembly: AssemblyProduct("TheHunter-BackupLaunch")]
-[assembly: AssemblyCopyright("Copyright © WorkGroup 2021")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("cuisanzhang")]
+[assembly: AssemblyProduct("自动备份存档启动器")]
+[assembly: AssemblyCopyright("Copyright © cuisanzhang@163.com 2021")]
+[assembly: AssemblyTrademark("cuisanzhang@163.com")]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 使此程序集中的类型
