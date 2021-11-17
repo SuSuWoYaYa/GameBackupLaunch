@@ -26,6 +26,7 @@ namespace TheHunter_BackupLaunch
         static string IniBackupPath = "BackupPath";
         static string IniGameFilePath = "GameFilePath";
         static string IniStartWithSteam = "StartWithSteam";
+        static string IniExitWhenStartGame = "ExitWhenStartGame";
         static string IniConfigFilePath = "";
 
         static string RunGameCommand = "";   //steam命令
@@ -37,6 +38,7 @@ namespace TheHunter_BackupLaunch
         static string BackupDirectoryPath = "";
         static string MyMail = "Power By cuisanzhang@163.com";
         static string StartWithSteam = "true";
+        static string ExitWhenStartGame = "true";
 
         public Form1()
         {
@@ -48,11 +50,11 @@ namespace TheHunter_BackupLaunch
         {
             toolTip1.SetToolTip(label4, MyMail);
 
-         
+
 
             //创建ini配置文件
             string path = System.Environment.CurrentDirectory;
-            IniConfigFilePath = Path.Combine(path, IniConfigFileName);  
+            IniConfigFilePath = Path.Combine(path, IniConfigFileName);
             IniHelper.Ini_Create(IniConfigFilePath);
             //ShowInfo(IniConfigFilePath);
 
@@ -60,8 +62,8 @@ namespace TheHunter_BackupLaunch
             SourceDirectoryPath = IniHelper.Ini_Read(IniBackConfig, IniGameSavePath, IniConfigFilePath);
             BackupDirectoryPath = IniHelper.Ini_Read(IniBackConfig, IniBackupPath, IniConfigFilePath);
             GameMainFilePath = IniHelper.Ini_Read(IniBackConfig, IniGameFilePath, IniConfigFilePath);
-            StartWithSteam = IniHelper.Ini_Read(IniBackConfig, IniStartWithSteam, IniConfigFilePath);
-
+            StartWithSteam = IniHelper.Ini_Read(IniBackConfig, IniExitWhenStartGame, IniConfigFilePath);
+            ExitWhenStartGame = IniHelper.Ini_Read(IniBackConfig, IniExitWhenStartGame, IniConfigFilePath);
 
             //设置显示界面
             textBox1.Text = SourceDirectoryPath;
@@ -71,11 +73,34 @@ namespace TheHunter_BackupLaunch
             //默认steam启动
             if (StartWithSteam.Equals("") || StartWithSteam.Equals("false"))
             {
-                checkBox2.Checked = false;
-          
+                RunGameCommand = GameMainFilePath; // .exe启动
+                label3.Visible = true;
+                textBox3.Visible = true;
+                button3.Visible = true;
+            }
+            else
+            {
+                checkBox3.Checked = true;
+                RunGameCommand = SteamCommand; // steam::\\启动
+                label3.Visible = false;
+                textBox3.Visible = false;
+                button3.Visible = false; 
+            }
+
+
+
+            //默认启动游戏后自动退出本程序
+            if (ExitWhenStartGame.Equals("") || ExitWhenStartGame.Equals("true"))
+            {
+                checkBox2.Checked = true;
+                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+            }
+            else
+            {
+                checkBox3.Checked = false;
+                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
             }
         }
-
 
 
         //文件夹选择对话框
@@ -131,6 +156,22 @@ namespace TheHunter_BackupLaunch
            }
         }
 
+
+        //显示存档备份文件夹
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (BackupDirectoryPath.Equals(""))
+            {
+                ShowInfo("没有设置存档备份文件夹");
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(BackupDirectoryPath);
+            }
+        }
+
+
+        //开始游戏按钮
         private void button6_Click(object sender, EventArgs e)
         {
 
@@ -156,33 +197,39 @@ namespace TheHunter_BackupLaunch
                 ShowInfo("备份成功");
 
                 //启动游戏
+                ShowInfo("启动游戏中..."); 
                 try
                 {
 
                     Process.Start(RunGameCommand);
-                    Application.Exit();
+                    ShowInfo("游戏启动完成.");
+                    ShowInfo("============================================");
+                    if(ExitWhenStartGame.Equals("true"))
+                    {
+                        Application.Exit();
+                    }
                 }
                 catch (Exception ex)
                 {
                     //启动游戏
-                    ShowInfo("启动游戏失败,如果你没有安装steam正版, 不要勾选'使用steam命令启动游戏'");
-                    ShowInfo("如果你没勾选.检查你的游戏路径," + ex.Message);
+                    MessageBox.Show("启动游戏失败");
+                    
+                    ShowInfo("启动游戏失败,当前游戏启动命令为");
+                    ShowInfo("---------------------------------------------");
+                    ShowInfo(RunGameCommand);
+                    ShowInfo("---------------------------------------------");
+                    ShowInfo("如果你没有安装steam正版, 不要勾选'使用steam命令启动游戏'");
+                    ShowInfo("你可以不要勾选'使用steam命令启动游戏'.设置游戏启动路径后再试试," + ex.Message);
+                    ShowInfo("讲道理, 这个小工具可以设置成备份任何游戏存档...");
+                    ShowInfo("毕竟它的设计目标就是复制存档文件夹然后启动游戏...");
+                    ShowInfo("这个小工具应该不会有BUG, 如果有那肯定是你电脑坏了,毕竟我测试了好几次,木有问题...");
                 }
+                
                 
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (BackupDirectoryPath.Equals(""))
-            {
-                ShowInfo("没有设置存档备份文件夹");
-            }
-            else
-            {
-                System.Diagnostics.Process.Start(BackupDirectoryPath);
-            }
-        }
+      
 
 
         //显示消息在文本框中
@@ -210,7 +257,7 @@ namespace TheHunter_BackupLaunch
                 return false;
             }
 
-            if ((checkBox2.Checked == false) && (textBox3.Text.Equals("")))
+            if ((checkBox3.Checked == false) && (textBox3.Text.Equals("")))
             {
                 ShowInfo("没有设置游戏文件路径");
                 return false;
@@ -226,6 +273,22 @@ namespace TheHunter_BackupLaunch
             return true;
         }
 
+
+
+        //生成一个新的文件夹名称,按 '年-月-日-时-分-秒' 添加
+        string GetNewFolderName(string sourceFolderPath)
+        {
+            string newFolderName = "";
+            newFolderName = DateTime.Now.ToString("-yyyy-MM-dd-HH-mm-ss");
+
+            string sourceFolder = "";
+            sourceFolder = Path.GetFileName(sourceFolderPath);
+
+            return sourceFolder + newFolderName;
+        }
+
+
+
         //开始备份存档
         void BackAllFiles()
         {
@@ -236,8 +299,8 @@ namespace TheHunter_BackupLaunch
             //生成备份位置绝对路径
             string NewFolderFullPath = "";
             NewFolderFullPath = Path.Combine(BackupDirectoryPath, NewFolder);
-            
-            ShowInfo("备份目标路径已生成 " + NewFolderFullPath);
+
+            ShowInfo("生成备份目标路径 " + NewFolderFullPath);
 
 
             ShowInfo("开始拷贝文件");
@@ -272,10 +335,28 @@ namespace TheHunter_BackupLaunch
             return false;
         }
 
-        //选择启动方式
+
+        //Ini启动游戏后是否退出
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox2.Checked)
+            {
+                ExitWhenStartGame = "true";
+                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+            }
+            else
+            {
+                ExitWhenStartGame = "false";
+                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+            }
+        }
+
+
+
+        //Ini选择启动方式
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox3.Checked)
             {
                 RunGameCommand = SteamCommand; // steam::\\启动
                 label3.Visible = false;
@@ -298,17 +379,17 @@ namespace TheHunter_BackupLaunch
         }
 
 
-        //生成一个新的文件夹名称,按 '年-月-日-时-分-秒' 添加
-        string GetNewFolderName(string sourceFolderPath)
-        {
-            string newFolderName = "";
-            newFolderName = DateTime.Now.ToString("-yyyy-MM-dd-HH-mm-ss");
 
-            string sourceFolder = "";
-            sourceFolder = Path.GetFileName(sourceFolderPath);
 
-            return sourceFolder+newFolderName;
-        }
+
+
+
+
+
+
+
+
+
 
 
         //https://blog.csdn.net/baidu_26678247/article/details/78254876?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1.no_search_link&spm=1001.2101.3001.4242.2
@@ -511,13 +592,22 @@ namespace TheHunter_BackupLaunch
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
             textBox4.SelectionStart = textBox4.Text.Length;
-            textBox4.ScrollToCaret(); 
+            textBox4.ScrollToCaret();
+
+            //————————————————
+            //版权声明：本文为CSDN博主「fml927」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+            //原文链接：https://blog.csdn.net/fml927/article/details/3940525
 
         }
-        //————————————————
-        //版权声明：本文为CSDN博主「fml927」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-        //原文链接：https://blog.csdn.net/fml927/article/details/3940525
 
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            
+            GameMainFilePath = textBox3.Text;
+            IniHelper.Ini_Write(IniBackConfig, IniGameFilePath, GameMainFilePath, IniConfigFilePath);
+        }
+
+  
     }
 
 
