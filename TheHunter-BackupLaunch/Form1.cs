@@ -6,12 +6,13 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace TheHunter_BackupLaunch
 {
     public partial class Form1 : Form
     {
-
+        static string GameProcessName = "360chrome";
         static string[] txtString;
         static string sourceDirectory;
         static string destinationDirectory;
@@ -21,37 +22,26 @@ namespace TheHunter_BackupLaunch
             InitializeComponent();
 
             //添加图片后缀选择框,默认选择第一个
-            this.comboBox1.Items.Add(".bmp");
-            this.comboBox1.Items.Add(".jpg");
-            this.comboBox1.Items.Add(".png");
-            this.comboBox1.SelectedIndex = 0;
+            //this.comboBox1.Items.Add(".bmp");
+            //this.comboBox1.Items.Add(".jpg");
+            //this.comboBox1.Items.Add(".png");
+            //this.comboBox1.SelectedIndex = 0;
         }
 
 
-
-        //文本文件选择
-        private void button1_Click(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "文本文件(*.txt)|*.txt|所有文件|*.*";
-            ofd.ValidateNames = true;
-            ofd.CheckPathExists = true;
-            ofd.CheckFileExists = true;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                string strFileName = ofd.FileName;
-                //其他代码
-                textBox1.Text = strFileName;
-            }
 
         }
 
-        //选择一个文件夹
-        private string OpenFileFolder()
+
+
+        //文件夹选择对话框
+        private string OpenFileFolder(string openDescription)
         {
 
             FolderBrowserDialog folder = new FolderBrowserDialog();
-            folder.Description = "选择所有文件存放目录";
+            folder.Description = openDescription;
             string sPath = "";
             if (folder.ShowDialog() == DialogResult.OK)
             {
@@ -62,16 +52,40 @@ namespace TheHunter_BackupLaunch
         }
 
 
+        //选择游戏存档文件夹
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //OpenFileDialog ofd = new OpenFileDialog();
+            //ofd.Filter = "文本文件(*.txt)|*.txt|所有文件|*.*";
+            //ofd.ValidateNames = true;
+            //ofd.CheckPathExists = true;
+            //ofd.CheckFileExists = true;
+            //if (ofd.ShowDialog() == DialogResult.OK)
+            //{
+            //    string strFileName = ofd.FileName;
+            //    //其他代码
+            //    textBox1.Text = strFileName;
+            //}
+
+            sourceDirectory = OpenFileFolder("选择游戏存档文件夹");
+            textBox1.Text = sourceDirectory;
+        }
         private void button2_Click(object sender, EventArgs e)
         {
-            sourceDirectory = OpenFileFolder();
+            sourceDirectory = OpenFileFolder("选择存档备份文件夹");
             textBox2.Text = sourceDirectory;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            destinationDirectory = OpenFileFolder();
-            textBox3.Text = destinationDirectory;
+            if (isGameRuning())
+            {
+                MessageBox.Show("检测到进程,游戏正在运行中,请先停止游戏");
+            }
+            else
+            {
+                Application.Exit();
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -90,13 +104,13 @@ namespace TheHunter_BackupLaunch
                 //    ShowInfo(s);
                 //}
                 ShowInfo("从txt共读取数据" + count + "条");
-                addFileExtension();
+ 
 
                 CopyFile();
             }
             catch (Exception exception)
             {
-                ShowInfo("遇到错误!请检查输入！！！");
+                ShowInfo("遇到错误!请检查输入！！！" + exception);
             }
 
 
@@ -105,44 +119,6 @@ namespace TheHunter_BackupLaunch
 
         }
 
-
-        //给获取的工号按照选择添加后缀
-        private void addFileExtension()
-        {
-
-            String extension;
-            int index = comboBox1.SelectedIndex;
-
-            switch (index)
-            {
-                case 0:
-                    extension = ".bmp";
-                    break;
-
-                case 1:
-                    extension = ".jpg";
-                    break;
-
-                case 2:
-                    extension = ".png";
-                    break;
-
-                default:
-                    extension = ".bmp";
-                    break;
-            }
-
-            for (int i = 0; i < txtString.Length; i++)
-            {
-                txtString[i] += extension;
-            }
-
-
-            //foreach (string s in txtString)
-            //{
-            //    ShowInfo(s);
-            //}
-        }
 
 
 
@@ -202,31 +178,25 @@ namespace TheHunter_BackupLaunch
 
             if (textBox1.Text.Equals(""))
             {
-                ShowInfo("先选择工号文本文件");
+                ShowInfo("选择游戏存档文件夹");
                 return false;
             }
+            sourceDirectory = textBox1.Text;
 
             if (textBox2.Text.Equals(""))
             {
-                ShowInfo("先选择原始照片路径");
+                ShowInfo("选择存档备份文件夹");
                 return false;
             }
-            sourceDirectory = textBox2.Text;
 
 
-            if (textBox3.Text.Equals(textBox2.Text))
+            if (textBox1.Text.Equals(textBox2.Text))
             {
-                ShowInfo("请选择一个不同的路径保存复制的图片");
+                ShowInfo("请选择一个不同的路径保存存档");
                 return false;
             }
+            destinationDirectory = textBox2.Text;
 
-
-            if (textBox3.Text.Equals(""))
-            {
-                ShowInfo("再选择照片保存路径");
-                return false;
-            }
-            destinationDirectory = textBox3.Text;
             return true;
         }
 
@@ -234,5 +204,26 @@ namespace TheHunter_BackupLaunch
 
 
 
+        //检测游戏运行进程
+        bool isGameRuning()
+        {
+            Process[] ps = Process.GetProcesses();
+            foreach (Process p in ps)
+            {
+                string info = "";
+                try
+                {
+                    info =p.ProcessName;
+                    if(GameProcessName.Equals(info))
+                        return true;
+                }
+                catch (Exception e)
+                {
+                    info = e.Message;
+                }
+                ShowInfo("检测进程" + info);
+            }
+            return false;
+        }
     }
 }
