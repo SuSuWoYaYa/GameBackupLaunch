@@ -16,8 +16,11 @@
 #1 ####
 本程序使用的steam/epic命令为原始桌面快捷方式的命令
 
-"steam://rungameid/518790";   //steam自带命令
-"com.epicgames.launcher://apps/c7f9346e3db148fca6dd63e9dd8451bd%3A7333ebed726f408e8f3bfa650488d32e%3A4f0c34d469bb47b2bcf5b377f47ccfe3?action=launch&silent=true";   //Epic自带命令
+//steam自带命令
+steam://rungameid/518790
+
+//Epic自带命令
+com.epicgames.launcher://apps/c7f9346e3db148fca6dd63e9dd8451bd%3A7333ebed726f408e8f3bfa650488d32e%3A4f0c34d469bb47b2bcf5b377f47ccfe3?action=launch&silent=true
 
 查看steam/epic启动命令方法
 游戏安装的时候,勾选在桌面建立快捷方式.
