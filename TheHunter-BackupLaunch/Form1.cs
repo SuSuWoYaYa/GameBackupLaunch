@@ -19,25 +19,30 @@ namespace TheHunter_BackupLaunch
     public partial class Form1 : Form
     {
         //ini文件名
-        static string IniConfigFileName = "Launcher-config.ini";
+        static string IniConfigFileName = "BackupLauncher-config.ini";
         //ini字段
-        static string IniBackConfig = "BackConfig";
+        static string IniBackConfig = "BackupLauncherConfig";
         static string IniGameSavePath = "GameSavePath";
         static string IniBackupPath = "BackupPath";
         static string IniGameFilePath = "GameFilePath";
         static string IniStartWithSteam = "StartWithSteam";
+        static string IniStartWithEpic  = "StartWithEpic";
         static string IniExitWhenStartGame = "ExitWhenStartGame";
         static string IniConfigFilePath = "";
 
         static string RunGameCommand = "";   //运行命令
         static string SteamCommand = "steam://rungameid/518790";   //steam命令
+        static string EpicCommand = "com.epicgames.launcher://apps/c7f9346e3db148fca6dd63e9dd8451bd%3A7333ebed726f408e8f3bfa650488d32e%3A4f0c34d469bb47b2bcf5b377f47ccfe3?action=launch&silent=true";   //Epic命令
         static string GameMainFilePath = "";    //游戏文件路径或命令
         static string GameProcessName = "theHunterCotW_F"; //游戏进程名称
+
+        
        //
         static string SourceDirectoryPath = "";
         static string BackupDirectoryPath = "";
         static string MyMail = "Power By cuisanzhang@163.com";
         static string StartWithSteam = "true";
+        static string StartWithEpic = "false";
         static string ExitWhenStartGame = "true";
 
         public Form1()
@@ -62,7 +67,8 @@ namespace TheHunter_BackupLaunch
             SourceDirectoryPath = IniHelper.Ini_Read(IniBackConfig, IniGameSavePath, IniConfigFilePath);
             BackupDirectoryPath = IniHelper.Ini_Read(IniBackConfig, IniBackupPath, IniConfigFilePath);
             GameMainFilePath = IniHelper.Ini_Read(IniBackConfig, IniGameFilePath, IniConfigFilePath);
-            StartWithSteam = IniHelper.Ini_Read(IniBackConfig, IniExitWhenStartGame, IniConfigFilePath);
+            StartWithSteam = IniHelper.Ini_Read(IniBackConfig, IniStartWithSteam, IniConfigFilePath);
+            StartWithEpic = IniHelper.Ini_Read(IniBackConfig, IniStartWithEpic, IniConfigFilePath);
             ExitWhenStartGame = IniHelper.Ini_Read(IniBackConfig, IniExitWhenStartGame, IniConfigFilePath);
 
             //设置显示界面
@@ -73,25 +79,39 @@ namespace TheHunter_BackupLaunch
             //默认steam启动
             if (StartWithSteam.Equals("") || StartWithSteam.Equals("true"))
             {
-          
-                checkBox3.Checked = true;
+
+                radioButton1.Checked = true;
                 RunGameCommand = SteamCommand; // steam::\\启动
                 label3.Visible = false;
                 textBox3.Visible = false;
                 button3.Visible = false; 
 
                 StartWithSteam = "true";
-                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
+                StartWithEpic = "false";
+
             }
+                  //Epic启动
+            else if (StartWithEpic.Equals("true"))
+            {
+
+                radioButton2.Checked = true;
+                RunGameCommand = EpicCommand; // Epic::\\启动
+                label3.Visible = false;
+                textBox3.Visible = false;
+                button3.Visible = false;
+
+                StartWithEpic = "true";
+                StartWithSteam = "false";
+            } //命令启动
             else
             {
-                RunGameCommand = GameMainFilePath; // .exe启动
+                radioButton3.Checked = true;
                 label3.Visible = true;
                 textBox3.Visible = true;
                 button3.Visible = true;
 
-                 StartWithSteam = "false";
-                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
+                StartWithEpic = "false";
+                StartWithSteam = "false";
             }
     
 
@@ -100,22 +120,30 @@ namespace TheHunter_BackupLaunch
             if (ExitWhenStartGame.Equals("") || ExitWhenStartGame.Equals("true"))
             {
                 checkBox2.Checked = true;
-                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+                ExitWhenStartGame = "true";
+
             }
             else
             {
-                checkBox3.Checked = false;
-                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+                checkBox2.Checked = false;
+                ExitWhenStartGame = "false";
             }
+
+            IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath); 
+            IniHelper.Ini_Write(IniBackConfig, IniStartWithEpic, StartWithEpic, IniConfigFilePath);
+            IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+
         }
 
 
         //文件夹选择对话框
-        private string OpenFileFolder(string openDescription)
+        private string OpenFileFolder(string openDescription, string openSelectedPath)
+           
         {
 
             FolderBrowserDialog folder = new FolderBrowserDialog();
-            folder.Description = openDescription;
+            folder.Description = openDescription;  //对话框描述
+            folder.SelectedPath = openSelectedPath; //默认路径
             string sPath = "";
             if (folder.ShowDialog() == DialogResult.OK)
             {
@@ -129,9 +157,8 @@ namespace TheHunter_BackupLaunch
         //选择游戏存档文件夹
         private void button1_Click(object sender, EventArgs e)
         {
-            
-
-            SourceDirectoryPath = OpenFileFolder("选择游戏存档文件夹");
+            //初始化打开我的文档
+            SourceDirectoryPath = OpenFileFolder("选择游戏存档文件夹", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
             textBox1.Text = SourceDirectoryPath;
             IniHelper.Ini_Write(IniBackConfig, IniGameSavePath, SourceDirectoryPath, IniConfigFilePath);
 
@@ -140,7 +167,8 @@ namespace TheHunter_BackupLaunch
         //选择存档备份文件夹
         private void button2_Click(object sender, EventArgs e)
         {
-            BackupDirectoryPath = OpenFileFolder("选择存档备份文件夹");
+            //初始化D盘
+            BackupDirectoryPath = OpenFileFolder("选择存档备份文件夹", "D:\\");
             textBox2.Text = BackupDirectoryPath;
             IniHelper.Ini_Write(IniBackConfig, IniBackupPath, BackupDirectoryPath, IniConfigFilePath);
         }
@@ -175,6 +203,19 @@ namespace TheHunter_BackupLaunch
             else
             {
                 System.Diagnostics.Process.Start(BackupDirectoryPath);
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (SourceDirectoryPath.Equals(""))
+            {
+                ShowInfo("---------------------------------------------");
+                ShowInfo("没有设置游戏存档文件夹");
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(SourceDirectoryPath);
             }
         }
 
@@ -220,19 +261,22 @@ namespace TheHunter_BackupLaunch
                 catch (Exception ex)
                 {
                     //启动游戏
-                    MessageBox.Show("启动游戏失败");
-                    
+                    MessageBox.Show("启动游戏失败","检查设置");
+                    ShowInfo("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     ShowInfo("启动游戏失败,当前游戏启动命令为");
                     ShowInfo("---------------------------------------------");
                     ShowInfo(RunGameCommand);
                     ShowInfo("---------------------------------------------");
                     
                     ShowInfo("如果你没有安装steam正版, 不要勾选'使用steam命令启动游戏'");
-                    ShowInfo("你可以不要勾选'使用steam命令启动游戏'.设置游戏启动路径后再试试," + ex.Message);
-                    ShowInfo("勾选默认启动猎人：荒野的召唤, 防坏档专用特别版");
+                    ShowInfo("如果你没有安装Epic正版, 不要勾选'使用Epic命令启动游戏'");
+                    ShowInfo("你可以设置游戏启动路径后再试试");
+                    
+                    //ShowInfo("勾选默认启动猎人：荒野的召唤,此为该游戏防坏档专用特别版");
                     ShowInfo("讲道理, 这个小工具可以设置成备份任何游戏存档...");
                     ShowInfo("毕竟它的设计目标就是复制存档文件夹然后启动游戏...");
-                    ShowInfo("这个小工具应该不会有BUG, 木有问题...如果有那肯定是你电脑坏了,毕竟我测试了好几个小时,还没有加班费!"); 
+                    ShowInfo("这个小工具应该不会有BUG, 木有问题...如果有那肯定是你电脑坏了,毕竟我测试了好几个小时,费了几十G手机流量,还没有加班费!");
+                    ShowInfo("错误信息:" + ex.Message);
                 }
                 
                 
@@ -269,7 +313,7 @@ namespace TheHunter_BackupLaunch
                 return false;
             }
 
-            if ((checkBox3.Checked == false) && (textBox3.Text.Equals("")))
+            if ((radioButton3.Checked == true) && (textBox3.Text.Equals("")))
             {
                 ShowInfo("---------------------------------------------");
                 ShowInfo("没有设置游戏文件路径");
@@ -279,7 +323,7 @@ namespace TheHunter_BackupLaunch
             if (textBox1.Text.Equals(textBox2.Text))
             {
                 ShowInfo("---------------------------------------------");
-                ShowInfo("请选择一个不同的路径保存存档");
+                ShowInfo("请选择一个不同的路径保存你的宝贵存档!!!");
                 return false;
             }
             BackupDirectoryPath = textBox2.Text;
@@ -356,31 +400,40 @@ namespace TheHunter_BackupLaunch
             if (checkBox2.Checked)
             {
                 ExitWhenStartGame = "true";
-                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+                
             }
             else
             {
                 ExitWhenStartGame = "false";
-                IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+ 
             }
+            IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
         }
 
 
-
-        //Ini选择启动方式
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        //Ini选择启动方式 新版
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox3.Checked)
+            label3.Visible = false;
+            textBox3.Visible = false;
+            button3.Visible = false;
+
+
+            if (radioButton1.Checked)
             {
                 RunGameCommand = SteamCommand; // steam::\\启动
-                label3.Visible = false;
-                textBox3.Visible = false;
-                button3.Visible = false;
-
                 StartWithSteam = "true";
-                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
+                StartWithEpic = "false";
+                //ShowInfo("radioButton1.Checked" + e.ToString() );
             }
-            else
+            else if (radioButton2.Checked)
+            {
+                RunGameCommand = EpicCommand; // Epic::\\启动
+                StartWithEpic = "true";
+                StartWithSteam = "false";
+                //ShowInfo("radioButton2.Checked" + e.ToString());
+            }
+            if (radioButton3.Checked)
             {
                 RunGameCommand = GameMainFilePath; // .exe启动
                 label3.Visible = true;
@@ -388,13 +441,15 @@ namespace TheHunter_BackupLaunch
                 button3.Visible = true;
 
                 StartWithSteam = "false";
-                IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
+                StartWithEpic = "false";
+                //ShowInfo("radioButton3.Checked" + e.ToString());
+
             }
+            IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath);
+            IniHelper.Ini_Write(IniBackConfig, IniStartWithEpic, StartWithEpic, IniConfigFilePath);
+
         }
-
-
-
-
+ 
 
 
 
@@ -622,6 +677,13 @@ namespace TheHunter_BackupLaunch
             GameMainFilePath = textBox3.Text;
             IniHelper.Ini_Write(IniBackConfig, IniGameFilePath, GameMainFilePath, IniConfigFilePath);
         }
+
+
+
+
+
+
+
 
   
     }
