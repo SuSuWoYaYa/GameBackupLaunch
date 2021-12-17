@@ -28,6 +28,7 @@ namespace TheHunter_BackupLaunch
         static string IniStartWithSteam = "StartWithSteam";
         static string IniStartWithEpic  = "StartWithEpic";
         static string IniExitWhenStartGame = "ExitWhenStartGame";
+        static string IniBackupMode = "BackupMode";
         static string IniConfigFilePath = "";
 
         static string RunGameCommand = "";   //运行命令
@@ -44,6 +45,7 @@ namespace TheHunter_BackupLaunch
         static string StartWithSteam = "true";
         static string StartWithEpic = "false";
         static string ExitWhenStartGame = "true";
+        static string BackupMode = "false";
 
         public Form1()
         {
@@ -70,6 +72,7 @@ namespace TheHunter_BackupLaunch
             StartWithSteam = IniHelper.Ini_Read(IniBackConfig, IniStartWithSteam, IniConfigFilePath);
             StartWithEpic = IniHelper.Ini_Read(IniBackConfig, IniStartWithEpic, IniConfigFilePath);
             ExitWhenStartGame = IniHelper.Ini_Read(IniBackConfig, IniExitWhenStartGame, IniConfigFilePath);
+            BackupMode = IniHelper.Ini_Read(IniBackConfig, IniBackupMode, IniConfigFilePath);
 
             //设置显示界面
             textBox1.Text = SourceDirectoryPath;
@@ -129,9 +132,27 @@ namespace TheHunter_BackupLaunch
                 ExitWhenStartGame = "false";
             }
 
+            //检测备份模式
+            if (BackupMode.Equals("") || BackupMode.Equals("false"))
+            {
+                checkBox3.Checked = false;
+                BackupMode = "false";
+                button7.Visible = false;
+                button6.Visible = true;
+            }
+            else
+            {
+                checkBox3.Checked = true;
+                BackupMode = "true";
+                button7.Visible = true;
+                button6.Visible = false;
+            }
+
+
             IniHelper.Ini_Write(IniBackConfig, IniStartWithSteam, StartWithSteam, IniConfigFilePath); 
             IniHelper.Ini_Write(IniBackConfig, IniStartWithEpic, StartWithEpic, IniConfigFilePath);
             IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
+            IniHelper.Ini_Write(IniBackConfig, IniBackupMode, BackupMode, IniConfigFilePath);
 
         }
 
@@ -283,7 +304,25 @@ namespace TheHunter_BackupLaunch
             }
         }
 
-      
+        //开始备份按钮
+        private void button7_Click(object sender, EventArgs e)
+        {
+            
+            if (checkAllInput() == false)//检查路径
+            {
+                return;
+
+            }
+            button7.Enabled = false;
+
+            ShowInfo("============================================");
+            ShowInfo("开始备份");
+            BackAllFiles();//开始备份存档
+            ShowInfo("============================================");
+           
+            button7.Enabled = true;
+        }
+
 
 
         //显示消息在文本框中
@@ -362,8 +401,23 @@ namespace TheHunter_BackupLaunch
 
 
             ShowInfo("开始拷贝文件");
-            //复制文件夹
-            CopyFolder(SourceDirectoryPath, NewFolderFullPath);
+
+
+            try
+            {//复制文件夹
+                CopyFolder(SourceDirectoryPath, NewFolderFullPath);
+
+                ShowInfo("备份完成");
+            }
+            catch (Exception e)
+            {
+                ShowInfo("---------------------------------------------");
+                ShowInfo("备份文件时出错,请尝试更改设置");
+                ShowInfo("备份文件时出错,请尝试更改设置");
+                ShowInfo("备份文件时出错,请尝试更改设置");
+                ShowInfo("---------------------------------------------");
+            }
+
         }
 
 
@@ -409,6 +463,26 @@ namespace TheHunter_BackupLaunch
             }
             IniHelper.Ini_Write(IniBackConfig, IniExitWhenStartGame, ExitWhenStartGame, IniConfigFilePath);
         }
+
+        //切换备份模式
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox3.Checked)
+            {
+                BackupMode = "true";
+                button7.Visible = true;
+                button6.Visible = false;
+
+            }
+            else
+            {
+                BackupMode = "false";
+                button7.Visible = false;
+                button6.Visible = true;
+            }
+            IniHelper.Ini_Write(IniBackConfig, IniBackupMode, BackupMode, IniConfigFilePath);
+        }
+
 
 
         //Ini选择启动方式 新版
@@ -645,13 +719,17 @@ namespace TheHunter_BackupLaunch
                 }
                 return 1;
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(exception.Message);
                 ShowInfo("---------------------------------------------");
                 ShowInfo("备份文件时出错,请尝试更改设置");
+                ShowInfo("备份文件时出错,请尝试更改设置");
+                ShowInfo("备份文件时出错,请尝试更改设置");
                 ShowInfo("---------------------------------------------");
-                return 0;
+                //抛出异常
+                throw (exception);
+
             }
 
         }
@@ -677,6 +755,8 @@ namespace TheHunter_BackupLaunch
             GameMainFilePath = textBox3.Text;
             IniHelper.Ini_Write(IniBackConfig, IniGameFilePath, GameMainFilePath, IniConfigFilePath);
         }
+
+
 
 
 
