@@ -283,22 +283,21 @@ namespace TheHunter_BackupLaunch
                 catch (Exception ex)
                 {
                     //启动游戏
-                    MessageBox.Show("启动游戏失败","检查设置");
+                    MessageBox.Show("启动游戏失败,\r\n错误信息:" + ex.Message, "启动失败");
+                    ShowInfo("错误信息:" + ex.Message);
                     ShowInfo("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     ShowInfo("启动游戏失败,当前游戏启动命令为");
                     ShowInfo("---------------------------------------------");
                     ShowInfo(RunGameCommand);
                     ShowInfo("---------------------------------------------");
-                    
-                    ShowInfo("如果你没有安装steam正版, 不要勾选'使用steam命令启动游戏'");
-                    ShowInfo("如果你没有安装Epic正版, 不要勾选'使用Epic命令启动游戏'");
+
+                    ShowInfo("如果你没有安装正版猎人：荒野的召唤, 不要勾选'使用steam命令/Epic命令 启动游戏'");
                     ShowInfo("你可以设置游戏启动路径后再试试");
                     
                     //ShowInfo("勾选默认启动猎人：荒野的召唤,此为该游戏防坏档专用特别版");
-                    ShowInfo("讲道理, 这个小工具可以设置成备份任何游戏存档...");
-                    ShowInfo("毕竟它的设计目标就是复制存档文件夹然后启动游戏...");
-                    ShowInfo("这个小工具应该不会有BUG, 木有问题...如果有那肯定是你电脑坏了,毕竟我测试了好几个小时,费了几十G手机流量,还没有加班费!");
-                    ShowInfo("错误信息:" + ex.Message);
+                    ShowInfo("小工具可以设置成备份任何游戏存档... 毕竟它的设计目标就是复制存档文件夹然后启动游戏...");
+                    ShowInfo("这个免费小工具应该不会有BUG, 木有问题...如果有那请联系我!");
+                    
                 }
                 
                 
@@ -412,6 +411,7 @@ namespace TheHunter_BackupLaunch
             }
             catch (Exception e)
             {
+                ShowInfo(e.Message);
                 ShowInfo("---------------------------------------------");
                 ShowInfo("备份文件时出错,请尝试更改设置");
                 ShowInfo("备份文件时出错,请尝试更改设置");
