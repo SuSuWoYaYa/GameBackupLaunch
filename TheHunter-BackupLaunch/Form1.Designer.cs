@@ -213,10 +213,10 @@
             this.radioButton1.AutoSize = true;
             this.radioButton1.Location = new System.Drawing.Point(6, 20);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(149, 16);
+            this.radioButton1.Size = new System.Drawing.Size(221, 16);
             this.radioButton1.TabIndex = 19;
             this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "使用steam命令启动游戏";
+            this.radioButton1.Text = "使用steam命令启动 猎人:荒野的召唤";
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
@@ -227,7 +227,7 @@
             this.groupBox1.Controls.Add(this.radioButton1);
             this.groupBox1.Location = new System.Drawing.Point(32, 210);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(225, 96);
+            this.groupBox1.Size = new System.Drawing.Size(244, 96);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "启动方式";
@@ -237,10 +237,10 @@
             this.radioButton3.AutoSize = true;
             this.radioButton3.Location = new System.Drawing.Point(6, 65);
             this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(215, 16);
+            this.radioButton3.Size = new System.Drawing.Size(239, 16);
             this.radioButton3.TabIndex = 21;
             this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "使用游戏路径或自定义命令启动游戏";
+            this.radioButton3.Text = "使用游戏路径或自定义命令启动其他游戏";
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
@@ -249,10 +249,10 @@
             this.radioButton2.AutoSize = true;
             this.radioButton2.Location = new System.Drawing.Point(6, 43);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(143, 16);
+            this.radioButton2.Size = new System.Drawing.Size(215, 16);
             this.radioButton2.TabIndex = 20;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "使用Epic命令启动游戏";
+            this.radioButton2.Text = "使用Epic命令启动 猎人:荒野的召唤";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
@@ -293,7 +293,7 @@
             // button7
             // 
             this.button7.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button7.Location = new System.Drawing.Point(295, 222);
+            this.button7.Location = new System.Drawing.Point(295, 224);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(135, 69);
             this.button7.TabIndex = 23;
@@ -327,7 +327,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动备份存档游戏启动器 V3.0";
+            this.Text = "自动备份存档游戏启动器 V3.1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
