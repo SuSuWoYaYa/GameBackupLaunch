@@ -754,6 +754,7 @@ namespace TheHunter_BackupLaunch
         {
             
             GameMainFilePath = textBox3.Text;
+            RunGameCommand = GameMainFilePath; // .exe启动
             IniHelper.Ini_Write(IniBackConfig, IniGameFilePath, GameMainFilePath, IniConfigFilePath);
         }
 
