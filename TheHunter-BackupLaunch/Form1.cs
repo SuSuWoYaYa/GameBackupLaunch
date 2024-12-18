@@ -119,17 +119,18 @@ namespace TheHunter_BackupLaunch
     
 
 
-            //默认启动游戏后自动退出本程序
-            if (ExitWhenStartGame.Equals("") || ExitWhenStartGame.Equals("true"))
+            //默认启动游戏后不退出本程序
+            if (ExitWhenStartGame.Equals("") || ExitWhenStartGame.Equals("false"))
             {
-                checkBox2.Checked = true;
-                ExitWhenStartGame = "true";
+                checkBox2.Checked = false;
+                ExitWhenStartGame = "false";
 
             }
             else
             {
-                checkBox2.Checked = false;
-                ExitWhenStartGame = "false";
+                checkBox2.Checked = true;
+                ExitWhenStartGame = "true";
+              
             }
 
             //检测备份模式
@@ -266,7 +267,7 @@ namespace TheHunter_BackupLaunch
                 ShowInfo("开始备份");
                 BackAllFiles();//开始备份存档
                 ShowInfo("备份成功");
-
+                ShowInfo("---------------------------------------------");
                 //启动游戏
                 ShowInfo("启动游戏中..."); 
                 try
@@ -401,13 +402,14 @@ namespace TheHunter_BackupLaunch
 
 
             ShowInfo("开始拷贝文件");
-
+            
 
             try
             {//复制文件夹
                 CopyFolder(SourceDirectoryPath, NewFolderFullPath);
 
                 ShowInfo("备份完成");
+                
             }
             catch (Exception e)
             {
@@ -418,6 +420,12 @@ namespace TheHunter_BackupLaunch
                 ShowInfo("备份文件时出错,请尝试更改设置");
                 ShowInfo("---------------------------------------------");
             }
+
+            long SourceDirectorySize = GetDirectoryLength(SourceDirectoryPath);
+            long NewFolderDirectorySize = GetDirectoryLength(NewFolderFullPath);
+            ShowInfo("---------------------------------------------");
+            ShowInfo("需备份文件夹大小" + SourceDirectorySize + "字节");
+            ShowInfo("已备份文件夹大小" + NewFolderDirectorySize + "字节");
 
         }
 
@@ -736,6 +744,35 @@ namespace TheHunter_BackupLaunch
         }
 
 
+        //https://blog.csdn.net/m1m2m3mmm/article/details/95932071
+        //得到指定目录下的数据量大小
+        public  long GetDirectoryLength(string dirPath)
+        {
+            //判断给定的路径是否存在,如果不存在则退出
+            if (!Directory.Exists(dirPath))
+                return 0;
+            long len = 0;
+
+            //定义一个DirectoryInfo对象
+            DirectoryInfo di = new DirectoryInfo(dirPath);
+
+            //通过GetFiles方法,获取di目录中的所有文件的大小
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                len += fi.Length;
+            }
+
+            //获取di中所有的文件夹,并存到一个新的对象数组中,以进行递归
+            DirectoryInfo[] dis = di.GetDirectories();
+            if (dis.Length > 0)
+            {
+                for (int i = 0; i < dis.Length; i++)
+                {
+                    len += GetDirectoryLength(dis[i].FullName);
+                }
+            }
+            return len;
+        }
 
 
         //C#中实现文本框的滚动条自动滚到最底端
