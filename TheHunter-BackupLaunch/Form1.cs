@@ -263,7 +263,7 @@ namespace TheHunter_BackupLaunch
           
             else
             {
-                ShowInfo("============================================");
+                //ShowInfo("============================================");
                 ShowInfo("开始备份");
                 BackAllFiles();//开始备份存档
                 ShowInfo("备份成功");
@@ -286,7 +286,7 @@ namespace TheHunter_BackupLaunch
                     //启动游戏
                     MessageBox.Show("启动游戏失败,\r\n错误信息:" + ex.Message, "启动失败");
                     ShowInfo("错误信息:" + ex.Message);
-                    ShowInfo("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    //ShowInfo("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     ShowInfo("启动游戏失败,当前游戏启动命令为");
                     ShowInfo("---------------------------------------------");
                     ShowInfo(RunGameCommand);
@@ -423,7 +423,7 @@ namespace TheHunter_BackupLaunch
 
             long SourceDirectorySize = GetDirectoryLength(SourceDirectoryPath);
             long NewFolderDirectorySize = GetDirectoryLength(NewFolderFullPath);
-            ShowInfo("---------------------------------------------");
+            //ShowInfo("---------------------------------------------");
             ShowInfo("需备份文件夹大小" + SourceDirectorySize + "字节");
             ShowInfo("已备份文件夹大小" + NewFolderDirectorySize + "字节");
 

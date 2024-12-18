@@ -76,11 +76,12 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(23, 327);
+            this.textBox4.Font = new System.Drawing.Font("宋体", 9F);
+            this.textBox4.Location = new System.Drawing.Point(32, 322);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox4.Size = new System.Drawing.Size(719, 97);
+            this.textBox4.Size = new System.Drawing.Size(687, 161);
             this.textBox4.TabIndex = 4;
             this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
@@ -306,7 +307,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(753, 442);
+            this.ClientSize = new System.Drawing.Size(756, 495);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button5);
