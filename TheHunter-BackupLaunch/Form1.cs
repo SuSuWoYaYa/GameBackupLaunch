@@ -273,7 +273,39 @@ namespace TheHunter_BackupLaunch
                 try
                 {
 
-                    Process.Start(RunGameCommand);
+                    
+
+                    if (isExeFile())
+                    {   
+                        //EXE文件设置工作目录
+
+                        //获取文件所在的目录
+                        string workDirectory = Path.GetDirectoryName(RunGameCommand);
+                        //MessageBox.Show(workDirectory);
+
+                        Process p = new System.Diagnostics.Process();
+                        //设置新进程的工作目录,如果不设置那么新进程的工作目录为开启这个进程的工作目录
+                        p.StartInfo.WorkingDirectory = workDirectory;
+                        //设置进程启动文件
+                        p.StartInfo.FileName = RunGameCommand;
+                        //设置进程启动参数
+                        //p.StartInfo.Arguments = DateTime.Now.Ticks.ToString();
+
+                        p.StartInfo.UseShellExecute = true;
+                        //p.StartInfo.RedirectStandardInput = false;
+                        // p.StartInfo.RedirectStandardOutput = false;
+                        //p.StartInfo.RedirectStandardError = false;
+                        // p.StartInfo.CreateNoWindow = false;
+
+                        //开启进程
+                        p.Start();
+                    }
+                    else
+                    {
+                        //自定义命令直接启动
+                        Process.Start(RunGameCommand);
+                    }
+
                     ShowInfo("游戏启动完成.");
                     ShowInfo("============================================");
                     if(ExitWhenStartGame.Equals("true"))
@@ -296,12 +328,29 @@ namespace TheHunter_BackupLaunch
                     ShowInfo("你可以设置游戏启动路径后再试试");
                     
                     //ShowInfo("勾选默认启动猎人：荒野的召唤,此为该游戏防坏档专用特别版");
-                    ShowInfo("小工具可以设置成备份任何游戏存档... 毕竟它的设计目标就是复制存档文件夹然后启动游戏...");
-                    ShowInfo("这个免费小工具应该不会有BUG, 木有问题...如果有那请联系我!");
+                    ShowInfo("本程序设计目标是复制存档文件夹然后启动游戏...");
+                    ShowInfo("这个小工具应该不会有BUG...如果有那请联系我!");
                     
                 }
                 
                 
+            }
+        }
+
+        //判断启动命令文件是不是exe后缀
+        private bool isExeFile()
+        {
+            string extension = Path.GetExtension(RunGameCommand);
+
+            if (extension.ToLower() == ".exe")
+            {
+                //MessageBox.Show("EXE");
+                return true;
+            }
+            else
+            {
+                //MessageBox.Show("NO EXE");
+                return false;
             }
         }
 
@@ -789,9 +838,9 @@ namespace TheHunter_BackupLaunch
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            
+            // 存储自定义启动命令
             GameMainFilePath = textBox3.Text;
-            RunGameCommand = GameMainFilePath; // .exe启动
+            RunGameCommand = GameMainFilePath; 
             IniHelper.Ini_Write(IniBackConfig, IniGameFilePath, GameMainFilePath, IniConfigFilePath);
         }
 
