@@ -1,0 +1,10 @@
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\bin\Release\GameBackupLaunch.exe
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\bin\Release\GameBackupLaunch.pdb
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\obj\x86\Release\GameBackupLaunch.csprojResolveAssemblyReference.cache
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\obj\x86\Release\TheHunter_BackupLaunch.Form1.resources
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\obj\x86\Release\GameBackupLaunch.Properties.Resources.resources
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\obj\x86\Release\GameBackupLaunch.csproj.GenerateResource.Cache
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\obj\x86\Release\GameBackupLaunch.exe
+D:\我的文档\Visual Studio 2010\Projects\TheHunter-BackupLaunch\TheHunter-BackupLaunch\obj\x86\Release\GameBackupLaunch.pdb
+D:\我的文档\Visual Studio 2010\Projects\GameBackupLaunch\GameBackupLaunch\obj\x86\Release\GameBackupLaunch.exe
+D:\我的文档\Visual Studio 2010\Projects\GameBackupLaunch\GameBackupLaunch\obj\x86\Release\GameBackupLaunch.pdb
