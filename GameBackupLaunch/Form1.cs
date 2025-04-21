@@ -125,16 +125,16 @@ namespace TheHunter_BackupLaunch
 
 
             //默认启动游戏后不退出本程序
-            if (ExitWhenStartGame.Equals("") || ExitWhenStartGame.Equals("true"))
+            if (ExitWhenStartGame.Equals("") || ExitWhenStartGame.Equals("false"))
             {
 
-                checkBox2.Checked = true;
-                ExitWhenStartGame = "true";
+                checkBox2.Checked = false;
+                ExitWhenStartGame = "false";
             }
             else
             {
-                checkBox2.Checked = false;
-                ExitWhenStartGame = "false";
+                checkBox2.Checked = true;
+                ExitWhenStartGame = "true";
 
             }
 
