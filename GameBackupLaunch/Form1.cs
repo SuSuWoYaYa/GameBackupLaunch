@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 
+using GameBackupLaunch;
+ 
 
 //读写ini
 //using System.IO;
@@ -161,6 +163,27 @@ namespace TheHunter_BackupLaunch
         }
 
 
+        // Vista文件夹选择对话框
+        private string VistaOpenFileFolder(string openDescription, string openSelectedPath)
+        {
+
+            MyFolderBrowserDialog folder = new MyFolderBrowserDialog();
+            folder.Description = openDescription;  //对话框描述
+            //folder.SelectedPath = openSelectedPath; //默认路径
+            string sPath = "";
+            if (folder.ShowDialog(this) == DialogResult.OK)
+            {
+
+                sPath = folder.DirectoryPath;
+            }
+            return sPath;
+        }
+
+
+      
+
+
+
         //文件夹选择对话框
         private string OpenFileFolder(string openDescription, string openSelectedPath)
         {
@@ -182,7 +205,10 @@ namespace TheHunter_BackupLaunch
         private void button1_Click(object sender, EventArgs e)
         {
             //初始化打开我的文档
-            SourceDirectoryPath = OpenFileFolder("选择游戏存档文件夹", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+
+
+
+            SourceDirectoryPath = VistaOpenFileFolder("选择游戏存档文件夹", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
             textBox1.Text = SourceDirectoryPath;
             IniHelper.Ini_Write(IniBackConfig, IniGameSavePath, SourceDirectoryPath, IniConfigFilePath);
 
@@ -192,7 +218,7 @@ namespace TheHunter_BackupLaunch
         private void button2_Click(object sender, EventArgs e)
         {
             //初始化D盘
-            BackupDirectoryPath = OpenFileFolder("选择存档备份文件夹", "D:\\");
+            BackupDirectoryPath = VistaOpenFileFolder("选择保存存档备份的文件夹", "D:\\");
             textBox2.Text = BackupDirectoryPath;
             IniHelper.Ini_Write(IniBackConfig, IniBackupPath, BackupDirectoryPath, IniConfigFilePath);
         }

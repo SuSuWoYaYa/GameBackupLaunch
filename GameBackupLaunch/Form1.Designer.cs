@@ -110,11 +110,11 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(641, 255);
+            this.button4.Location = new System.Drawing.Point(539, 241);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(78, 38);
+            this.button4.Size = new System.Drawing.Size(116, 38);
             this.button4.TabIndex = 8;
-            this.button4.Text = "打开存档 备份目录";
+            this.button4.Text = "打开存档备份目录";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -180,7 +180,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(53, 233);
+            this.checkBox2.Location = new System.Drawing.Point(70, 219);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(168, 16);
             this.checkBox2.TabIndex = 17;
@@ -191,11 +191,11 @@
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button5.Location = new System.Drawing.Point(640, 210);
+            this.button5.Location = new System.Drawing.Point(99, 240);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(78, 39);
+            this.button5.Size = new System.Drawing.Size(117, 39);
             this.button5.TabIndex = 21;
-            this.button5.Text = "打开游戏 存档目录";
+            this.button5.Text = "打开游戏存档目录";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -214,7 +214,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(470, 233);
+            this.checkBox3.Location = new System.Drawing.Point(539, 219);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(108, 16);
             this.checkBox3.TabIndex = 18;
@@ -247,7 +247,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动备份存档游戏启动器 V3.3";
+            this.Text = "自动备份存档游戏启动器 V3.4";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
