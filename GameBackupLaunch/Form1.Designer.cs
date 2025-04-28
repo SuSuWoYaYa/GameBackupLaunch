@@ -100,7 +100,7 @@
             // button6
             // 
             this.button6.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button6.Location = new System.Drawing.Point(295, 208);
+            this.button6.Location = new System.Drawing.Point(329, 222);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(101, 57);
             this.button6.TabIndex = 7;
@@ -202,7 +202,7 @@
             // button7
             // 
             this.button7.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button7.Location = new System.Drawing.Point(286, 203);
+            this.button7.Location = new System.Drawing.Point(311, 210);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(135, 69);
             this.button7.TabIndex = 23;
@@ -247,7 +247,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动备份存档游戏启动器 V3.4";
+            this.Text = "自动备份存档游戏启动器 V3.5";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

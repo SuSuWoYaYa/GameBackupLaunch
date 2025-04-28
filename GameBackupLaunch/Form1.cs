@@ -276,8 +276,10 @@ namespace TheHunter_BackupLaunch
         {
             button6.Enabled = false;
 
-            if (checkAllInput() == false)//检查路径
+            if ( checkAllInput() == false )//检查路径
             {
+                button6.Enabled = true;
+                button6.Focus();
                 return;
 
             }
@@ -298,6 +300,7 @@ namespace TheHunter_BackupLaunch
             {
                 ShowInfo("备份失败");
                 button6.Enabled = true;
+                button6.Focus();
                 return;
             }
 
@@ -369,7 +372,7 @@ namespace TheHunter_BackupLaunch
             }
 
             button6.Enabled = true;
-
+            button6.Focus();
         }
 
         //判断启动命令文件是不是exe后缀
@@ -437,7 +440,7 @@ namespace TheHunter_BackupLaunch
                 return false;
             }
 
-            if (textBox3.Text.Equals(""))
+            if (textBox3.Text.Equals("") && checkBox3.Checked == false)
             {
                 ShowInfo("---------------------------------------------");
                 ShowInfo("没有设置游戏文件路径");
