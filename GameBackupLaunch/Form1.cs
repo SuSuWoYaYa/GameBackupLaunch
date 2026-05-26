@@ -9,7 +9,7 @@ using System.IO;
 using System.Diagnostics;
 
 using GameBackupLaunch;
- 
+
 
 //读写ini
 //using System.IO;
@@ -180,7 +180,7 @@ namespace TheHunter_BackupLaunch
         }
 
 
-      
+
 
 
 
@@ -209,6 +209,12 @@ namespace TheHunter_BackupLaunch
 
 
             SourceDirectoryPath = VistaOpenFileFolder("选择游戏存档文件夹", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+            if (String.IsNullOrEmpty(SourceDirectoryPath))
+            {
+                //无选择内容退出设置
+                return;
+            }
+
             textBox1.Text = SourceDirectoryPath;
             IniHelper.Ini_Write(IniBackConfig, IniGameSavePath, SourceDirectoryPath, IniConfigFilePath);
 
@@ -219,6 +225,12 @@ namespace TheHunter_BackupLaunch
         {
             //初始化D盘
             BackupDirectoryPath = VistaOpenFileFolder("选择保存存档备份的文件夹", "D:\\");
+            if (String.IsNullOrEmpty(BackupDirectoryPath))
+            {
+                //无选择内容退出设置
+                return;
+            }
+
             textBox2.Text = BackupDirectoryPath;
             IniHelper.Ini_Write(IniBackConfig, IniBackupPath, BackupDirectoryPath, IniConfigFilePath);
         }
@@ -276,7 +288,7 @@ namespace TheHunter_BackupLaunch
         {
             button6.Enabled = false;
 
-            if ( checkAllInput() == false )//检查路径
+            if (checkAllInput() == false)//检查路径
             {
                 button6.Enabled = true;
                 button6.Focus();
@@ -511,8 +523,8 @@ namespace TheHunter_BackupLaunch
                 long SourceDirectorySize = GetDirectoryLength(SourceDirectoryPath);
                 long NewFolderDirectorySize = GetDirectoryLength(NewFolderFullPath);
                 //ShowInfo("---------------------------------------------");
-                ShowInfo("需备份文件夹大小" + SourceDirectorySize + "字节");
-                ShowInfo("已备份文件夹大小" + NewFolderDirectorySize + "字节");
+                ShowInfo("需备份文件夹大小" + FormatSize(SourceDirectorySize));
+                ShowInfo("已备份文件夹大小" + FormatSize(NewFolderDirectorySize));
                 isBackOk = true;
             }
             catch (Exception e)
@@ -874,6 +886,19 @@ namespace TheHunter_BackupLaunch
             return len;
         }
 
+        //C#格式化文件大小
+        private string FormatSize(long len)
+        {
+            double size = len;
+            if (size < 1024)
+                return size + "B";
+            else if (size < 1024 * 1024)
+                return (size / 1024).ToString("#0.00 ") + "KB";
+            else if (size < 1024 * 1024 * 1024)
+                return (size / 1024 / 1024).ToString("#0.00 ") + "MB";
+            else
+                return (size / 1024 / 1024 / 1024).ToString("#0.00 ") + "GB";
+        }
 
         //C#中实现文本框的滚动条自动滚到最底端
         private void textBox4_TextChanged(object sender, EventArgs e)
